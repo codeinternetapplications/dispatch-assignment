@@ -74,7 +74,7 @@ class Bus {
 		// guard: check if bus is driving
 		if (!this.isOnRoute()) {
 			return;
-	}
+		}
 
 		// stop the bus
 		this.driving = false
