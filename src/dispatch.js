@@ -1,19 +1,21 @@
 class Dispatch {
 	constructor(depot) {
 		this.vehicles = [];
-		this.depot = depot
-		this.bus_number = 100
+		this.depot = depot;
+		this.route_time = 40;
+		this.total_time = 300;
+		this.bus_number = 130;
 	}
 
 	start() {
 		// simulate evolution of time:
-		for (let step = 0; step <= 10 * 60; step += 5) {
+		for (let step = 0; step <= this.total_time; step += 5) {
 			console.log(`Time is flowing: ${step} minutes passed.`);
-			if (step < 600) {
+			if (step < this.total_time) {
 				this.move(step);
 			}
-			if (step == 600) {
-				console.log(`\nA total of ${this.vehicles.length} busses were necessary to complete today's service`);
+			if (step == this.total_time) {
+				console.log(`\nA total of ${this.vehicles.length} busses were necessary to complete today's service\n`);
 			}
 		}
 	}
@@ -28,7 +30,7 @@ class Dispatch {
 		});
 
 		// stop the busses
-		if (step === 595) this.vehicles.map(vehicle => vehicle.stop());
+		if (step === (this.total_time-5)) this.vehicles.map(vehicle => vehicle.stop());
 	}
 
 	dispatch(step) {
@@ -37,7 +39,7 @@ class Dispatch {
 
 		// fire it up if available
 		if (bus) {
-			bus.start();
+			bus.start(this.route_time);
 			// this is not good
 		} else {
 			throw Error(`Ran out of busses at step ${step}!`);
@@ -51,7 +53,8 @@ class Dispatch {
 
 		// get the busses at the charging station that are ready to go
 		const busses = this.vehicles.filter(vehicle => {
-			return !vehicle.isOnRoute() && vehicle.hasChargeAvailable(70);
+			// consider worst case route energy consumption
+			return !vehicle.isOnRoute() && vehicle.canCompleteRoute();
 		});
 
 		// find the bus at the charging station with the highest SOC
