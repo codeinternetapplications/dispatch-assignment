@@ -4,7 +4,6 @@ class Dispatch {
 		this.depot = depot;
 		this.route_time = 40;
 		this.total_time = 300;
-		this.bus_number = 130;
 	}
 
 	start() {
@@ -67,7 +66,7 @@ class Dispatch {
 		// no busses available
 		} else {
 			// get one from the depot
-			bus = this.depot.getBus(++this.bus_number);
+			bus = this.depot.getBus();
 			console.log(`\n  Requested new bus ${bus.name} from the DEPOT\n`);
 			// push it to today's stack
 			this.vehicles.push(bus);
