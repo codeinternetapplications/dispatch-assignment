@@ -3,6 +3,13 @@ const Bus      = require("./bus")
 
 const dispatch = new Dispatch()
 
-dispatch.addVehicle(new Bus("1211", 100))
+dispatch.addVehicle(new Bus("32", 100))
+dispatch.addVehicle(new Bus("33", 100))
+dispatch.addVehicle(new Bus("34", 100))
+dispatch.addVehicle(new Bus("35", 100))
 
-dispatch.start()
+try {
+	dispatch.start()
+} catch (error) {
+    console.error(error)
+}

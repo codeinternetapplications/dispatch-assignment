@@ -1,38 +1,56 @@
 class Dispatch {
+  constructor() {
+    this.vehicles = [];
+  }
 
-	constructor() {
-		this.vehicles = []
-	}
+  start() {
+    // simulate evolution of time:
+    for (let step = 0; step <= 10 * 60; step += 5) {
+      console.log(`Time is flowing: ${step} minutes passed.`);
+      if (step < 600) {
+        this.move(step);
+      }
+    }
+  }
 
-	move(step) {
-		// figure out when and when not to dispatch
+  move(step) {
+    // dispatch a bus every 15 minutes
+    if (step % 15 === 0) this.dispatch(step);
 
-		// For now, we start only once.
-		if (step === 0) this.dispatch()
+    // move the vehicles
+    this.vehicles.map(vehicle => {
+      vehicle.step();
+    });
 
-		if (step === 595) this.vehicles.map((vehicle) => vehicle.stop())
-	}
+    // stop the busses
+    if (step === 595) this.vehicles.map(vehicle => vehicle.stop());
+  }
 
-	start() {
-		// simulate evolution of time:
-		for (let step = 0; step <= 10 * 60; step += 5) {
+  dispatch(step) {
+    // find a bus to dispatch
+    const bus = this.findVehicle();
 
-			console.log(`Time is flowing: ${step} minutes passed.`)
+    // fire it up if available
+    if (bus) {
+      bus.start();
+      // this is not good
+    } else {
+      throw Error(`Ran out of busses at step ${step}!`);
+    }
+  }
 
-			this.move(step)
-		}
-	}
+  // get a bus to dispatch
+  findVehicle() {
+    const bus = this.vehicles.find(vehicle => {
+      return !vehicle.isOnRoute() && vehicle.hasChargeAvailable(70);
+    });
 
-	dispatch() {
-		// Make sure to pick the right bus
-		const bus = this.vehicles[0]
+    return bus;
+  }
 
-		bus.start()
-	}
-
-	addVehicle(veh) {
-		this.vehicles.push(veh)
-	}
+  addVehicle(vehicle) {
+	  this.vehicles.push(vehicle);
+  }
 }
 
 module.exports = Dispatch
